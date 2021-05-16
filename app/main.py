@@ -75,7 +75,7 @@ def annotate_image(image_id):
 def record(image_id):
     user = request.form.get('u', '')
     result = json.dumps(request.form)
-    logger.info(datetime.now().isoformat() + '\t' + request.remote_addr + '\t' + image_id + '\t' + result)
+    logger.info(datetime.now().isoformat() + '\t' + request.remote_addr + '\t' + str(image_id) + '\t' + result)
     redirect_url = f'/{(image_id + 1)}?u={user}'
     return redirect(redirect_url)
 
