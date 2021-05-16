@@ -1,0 +1,35 @@
+{% extends "_layout.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 50px auto; width: 1050px">
+    <div class="row g-2">
+        <div class="col-auto">
+            <label for="username">Your name</label>
+        </div>
+        <div class="col-auto">
+            <input type="text" id="username" name="username" class="form-control">
+        </div>
+    </div>
+    <div class="row g-2">
+        <div class="col-auto">
+            <label for="image-number">Image Number</label>
+        </div>
+        <div class="col-auto">
+            <input type="number" id="image-number" name="image-number" class="form-control" value="1">
+        </div>
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn btn-primary" onClick="go()">Go</button>
+    </div>
+</div>
+
+<script>
+    function go() {
+        location.href = '/' + $('#image-number').val() + '?u=' + $('#username').val().replace(' ', '-');
+    }
+</script>
+{% endblock %}
