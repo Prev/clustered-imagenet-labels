@@ -12,6 +12,7 @@ data = {
     'class_search_numbers': utils.load_json('data/class_search_numbers.json'),
     'image_urls': utils.load_json('data/image_urls.json'),
     'descendants': utils.load_json('data/descendants.json'),
+    'new_labels': utils.load_json('data/new_labels.json'),
 }
 blacklists = ('animal', 'device', 'instrument', 'clothing', 'plant part',
               'fruit', 'natural object', 'musical instrument', 'organism', 'vertebrate',
@@ -34,11 +35,13 @@ def annotate_image(image_id):
     candidates = data['classname_candiates'][classid]
     numbers = data['class_search_numbers']
 
-    main_candidate = candidates[-1]
-    for classname in candidates:
-        if classname not in blacklists and \
-            numbers[classname] >= numbers[main_candidate]:
-            main_candidate = classname
+    # main_candidate = candidates[-1]
+    # for classname in candidates:
+    #     if classname not in blacklists and \
+    #         numbers[classname] >= numbers[main_candidate]:
+    #         main_candidate = classname
+    main_candidate = data['new_labels'][classid]
+    print(main_candidate)
 
     candidates_info = []
     for classname in candidates:
@@ -59,6 +62,8 @@ def annotate_image(image_id):
             'selected': classname == main_candidate,
             'descendants': descendants,
             'search_number': numbers[classname],
+            'is_original_label': classname == candidates[-1],
+            'is_new_label': classname == main_candidate,
         })
 
     return render_template('annotate.html',

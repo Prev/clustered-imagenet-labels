@@ -25,6 +25,12 @@
             float: left;
         }
 
+        .badge {
+            font-size: 10px;
+            font-weight: 400;
+            vertical-align: text-bottom;
+        }
+
         .descendants {
             display: none;
         }
@@ -55,6 +61,13 @@
                 <label class="form-check-label" for="radio-{{ candidate.name }}">
                     {{ candidate.name }}
                     <span class="small">{{ candidate.search_number | readable_number }}</span>
+
+                    {% if candidate.is_original_label %}
+                    <span class="badge bg-info text-dark">Original</span>
+                    {% endif %}
+                    {% if candidate.is_new_label %}
+                    <span class="badge bg-info text-dark">New Label</span>
+                    {% endif %}
                 </label>
             </div>
             {% endfor %}
