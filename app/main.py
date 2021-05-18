@@ -1,3 +1,4 @@
+import collections
 import os
 import json
 from datetime import datetime
@@ -13,6 +14,7 @@ data = {
     'image_urls': utils.load_json('data/image_urls.json'),
     'descendants': utils.load_json('data/descendants.json'),
     'new_labels': utils.load_json('data/new_labels.json'),
+    'new_labels_v2': utils.load_json('data/new_labels_v2.json'),
 }
 blacklists = ('animal', 'device', 'instrument', 'clothing', 'plant part',
               'fruit', 'natural object', 'musical instrument', 'organism', 'vertebrate',
@@ -40,8 +42,10 @@ def annotate_image(image_id):
     #     if classname not in blacklists and \
     #         numbers[classname] >= numbers[main_candidate]:
     #         main_candidate = classname
-    main_candidate = data['new_labels'][classid]
-    print(main_candidate)
+    main_candidate = data['new_labels_v2'][classid]
+    original_label = candidates[-1]
+    if main_candidate not in candidates:
+        candidates.append(main_candidate)
 
     candidates_info = []
     for classname in candidates:
@@ -62,7 +66,7 @@ def annotate_image(image_id):
             'selected': classname == main_candidate,
             'descendants': descendants,
             'search_number': numbers[classname],
-            'is_original_label': classname == candidates[-1],
+            'is_original_label': classname == original_label,
             'is_new_label': classname == main_candidate,
         })
 
@@ -83,6 +87,26 @@ def record(image_id):
     logger.info(datetime.now().isoformat() + '\t' + request.remote_addr + '\t' + str(image_id) + '\t' + result)
     redirect_url = f'/{(image_id + 1)}?u={user}'
     return redirect(redirect_url)
+
+
+@app.route('/c/<classid>', methods=['GET'])
+def annotate_by_classid(classid):
+    image_id = data['classids'].index(classid)
+    return redirect(f'/{image_id}')
+
+
+@app.route('/look-at-once', methods=['GET'])
+def look_at_once():
+    grouped_classes = collections.defaultdict(list)
+    for classid, new_label in data['new_labels_v2'].items():
+        grouped_classes[new_label].append({
+            'classid': classid,
+            'classname': data['classname_candiates'][classid][-1],
+            'image_urls': data['image_urls'][classid],
+        })
+    grouped_classes = dict(grouped_classes)
+
+    return render_template('look_at_once.html', grouped_classes=grouped_classes)
 
 
 @app.template_filter()

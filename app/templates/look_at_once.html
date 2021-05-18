@@ -1,0 +1,56 @@
+{% extends "_layout.html" %}
+
+{% block head %}
+<style>
+    h5 {
+        font-size: 18px;
+        margin: 5px 0;
+    }
+
+    .image {
+        width: 150px;
+        height: 110px;
+        background-size: cover;
+    }
+
+    ul.classes {
+        padding: 0;
+    }
+
+    ul.classes li {
+        float: left;
+        list-style: none;
+        margin: 0 10px 0 0;
+        padding: 0;
+    }
+
+    ul.classes li a {
+        color: black;
+        text-decoration: none;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin: 50px auto; width: 1050px">
+    <h2>Clustered ImageNet Labels</h2>
+    {% for new_label, classes in grouped_classes.items() %}
+    <div>
+        <h5>{{ loop.index }}. {{ new_label }} <span style="color: #666; font-size: 13px">({{ classes | length }})</span></h5>
+        <ul class="classes clearfix">
+            {% for item in classes %}
+            <li>
+                <div>
+                    <a href="/c/{{ item.classid }}">{{ item.classname }}</a>
+                </div>
+                <div class="image" style="background-image: url('{{ item.image_urls[0] }}')"></div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
