@@ -42,9 +42,10 @@
             {% for item in classes %}
             <li>
                 <div>
-                    <a href="/c/{{ item.classid }}">{{ item.classname }}</a>
+                    <!-- <a href="/c/{{ item.classid }}">{{ item.classname }}</a> -->
+                    {{ item.classname }} ({{ item.classid }})
                 </div>
-                <div class="image" style="background-image: url('{{ item.image_urls[0] }}')"></div>
+                <a href="/c/{{ item.classid }}"><div class="image" style="background-image: url('{{ item.image_urls[0] }}')"></div></a>
             </li>
             {% endfor %}
         </ul>
