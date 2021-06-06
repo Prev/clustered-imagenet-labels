@@ -14,7 +14,6 @@ data = {
     'image_urls': utils.load_json('data/image_urls.json'),
     'descendants': utils.load_json('data/descendants.json'),
     'new_labels': utils.load_json('data/new_labels.json'),
-    'new_labels_v3': utils.load_json('data/new_labels_v3.json'),
 }
 blacklists = ('animal', 'device', 'instrument', 'clothing', 'plant part',
               'fruit', 'natural object', 'musical instrument', 'organism', 'vertebrate',
@@ -42,7 +41,7 @@ def annotate_image(image_id):
     #     if classname not in blacklists and \
     #         numbers[classname] >= numbers[main_candidate]:
     #         main_candidate = classname
-    main_candidate = data['new_labels_v3'][classid]
+    main_candidate = data['new_labels'][classid]
     original_label = candidates[-1]
     if main_candidate not in candidates:
         candidates.append(main_candidate)
@@ -99,7 +98,7 @@ def annotate_by_classid(classid):
 def look_at_once():
     grouped_classes = collections.defaultdict(list)
     i = 0
-    for classid, new_label in data['new_labels_v3'].items():
+    for classid, new_label in data['new_labels'].items():
         grouped_classes[new_label].append({
             'classid': classid,
             'classname': data['classname_candiates'][classid][-1],
@@ -107,7 +106,6 @@ def look_at_once():
         })
         i += 1
     grouped_classes = dict(grouped_classes)
-    print(i)
     return render_template('look_at_once.html', grouped_classes=grouped_classes)
 
 
