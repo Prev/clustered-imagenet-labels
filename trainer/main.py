@@ -24,16 +24,18 @@ parser.add_argument('--epochs', default=40, type=int, metavar='N',
 parser.add_argument('-b', '--batch-size', default=256, type=int,
                     metavar='N', help='mini-batch size (default: 256)')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
-                    metavar='LR', help='initial learning rate', dest='lr')
+                    metavar='LR', help='initial learning rate (default: 0.1)', dest='lr')
 parser.add_argument('--lr-step', default=10, type=int,
-                    metavar='N', help='step size of step scheduler')
+                    metavar='N', help='step size of step scheduler (default: 10)')
 parser.add_argument('--lr-step-gamma', default=0.5, type=float,
-                    metavar='N', help='gamma value of step scheduler')
+                    metavar='N', help='gamma value of step scheduler (default: 0.5)')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
-                    help='momentum')
+                    help='momentum (default: 0.9)')
 parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
                     metavar='W', help='weight decay (default: 1e-4)',
                     dest='weight_decay')
+parser.add_argument('--finetuning', default='', type=str, metavar='PATH',
+                    help='enable finetuning mode from pre-trained model')
 
 def train(epoch, trainloader, model, criterion, optimizer, replacing_labels=False):
     losses = AverageMeter('Loss', ':.5f')
@@ -108,7 +110,7 @@ def main(args):
     with open(os.path.join(experiment_result_dir, 'log.log'), 'a') as fout:
         for key, value in vars(args).items():
             fout.write(f'- {key}: {value}\n')
-        fout.write('---------------------------')
+        fout.write('---------------------------\n')
 
     # Dataset
     traindir = os.path.join(args.data, 'train')
@@ -131,9 +133,23 @@ def main(args):
     testloader = torch.utils.data.DataLoader(
         testset, batch_size=args.batch_size, shuffle=False, num_workers=args.workers)
 
-    # Model
-    model = ResNet18(num_classes)
-    model.cuda()
+
+    if args.finetuning:
+        # Run finetuning from the pretrained model
+        checkpoint = torch.load(args.finetuning)
+        state_dict = checkpoint['state_dict'] if 'state_dict' in checkpoint else checkpoint
+
+        model = ResNet18(1000)
+        model.load_state_dict(state_dict)
+
+        # Fix FC layer
+        num_ftrs = model.linear.in_features
+        model.linear = torch.nn.Linear(num_ftrs, 488)
+        model.cuda()
+    else:
+        # Model
+        model = ResNet18(num_classes)
+        model.cuda()
 
     # Loss, optimizer, scheduler
     criterion = torch.nn.CrossEntropyLoss().cuda()
