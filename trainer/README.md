@@ -1,4 +1,4 @@
-## Training Image Classifier with-or-without CIL
+# Train Image Classifier with-or-without CIL
 
 For faster training, we use [Downsampled ImageNet](https://arxiv.org/abs/1707.08819) instead of original ImageNet.
 

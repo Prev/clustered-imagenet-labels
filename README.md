@@ -2,8 +2,8 @@
 
 > This work was done as a term project in 2021 Spring CS570: Artificial Intelligence and Machine Learning, Prof: Tae-Kyun Kim, at KAIST.
 
-[🔗 Project Report (Scientific Paper Style)](report.pdf)
-[🔗 Clustered ImageNet Labels (json file)](trainer/data/clustered_imagenet_labels.json)
+[🔗 &nbsp;Project Report (Scientific Paper Style)](report.pdf)
+[🔗 &nbsp;Clustered ImageNet Labels (json file)](trainer/data/clustered_imagenet_labels.json)
 
 
 ## Project Abstract
@@ -17,8 +17,32 @@ We demonstrate that a model trained with CIL obtains higher accuracy compared to
 ![Overview of CIL](docs/cil_overview.jpg)
 *Sample mapping rules in **Clustered ImageNet Labels**, where too finely divided classes in original ImageNet are clustered into a general class.*
 
-## How to use
+## How to train with CIL
 
 You can use CIL when training an image classifier.<br>
-Sample training code written in PyTorch is available at [trainer](./trainer).
+Training code using CIL is included in this repo.
+
+```bash
+# 1. Clone this repo
+$ git clone https://github.com/Prev/clustered-imagenet-labels
+
+# 2. Change directory
+$ cd clustered-imagenet-labels/trainer
+
+# 3. Download the dataset
+
+# 4. Install dependencies
+$ pip install -r requirements.txt
+
+# 5. Run python
+$ python main.py ~/dataset/imagenet_32_32/
+```
+
+The detailed instruction is available at [trainer](./trainer).<br>
+You can also check the training code written in PyTorch in the same link.
+
+
+## How to use the survey application
+
+Visit [survey_app](./survey_app) to see the instruction for running the survey app.
 
